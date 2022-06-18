@@ -3,7 +3,8 @@ from Cython.Build import cythonize
 import numpy
 
 with open("README.md", "rb") as f:
-    long_description = f.read().decode("utf-8")
+    raw_long_description = f.read().decode("utf-8")
+    long_description = raw_long_description.partition("## Gallery")[0]
 
 setup(
     name="termgl",
@@ -48,4 +49,5 @@ setup(
         "Programming Language :: Cython",
     ],
     keywords="graphics terminal render rendering text ascii",
+    install_requires=['numpy>=1.20'],
 )
