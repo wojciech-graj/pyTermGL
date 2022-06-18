@@ -13,7 +13,7 @@ Realtime input reading from terminal for user-interaction.\
 
 ## Documentation
 
-Documentation can be found [here](https://github.com/wojciech-graj/pyTermGL/blob/master/docs/html/index.html)
+Documentation can be found [here](https://wojciech-graj.github.io/pyTermGL/)
 
 ### Basic Example
 
