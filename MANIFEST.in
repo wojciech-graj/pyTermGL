@@ -1,0 +1,3 @@
+include /termgl.pyx
+include /TermGL/lib/*
+exclude /termgl.c

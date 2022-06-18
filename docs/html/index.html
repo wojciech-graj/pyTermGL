@@ -1,0 +1,665 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>TermGL Documentation &#8212; TermGL 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">TermGL 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TermGL Documentation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="termgl-documentation">
+<h1>TermGL Documentation<a class="headerlink" href="#termgl-documentation" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-termgl"></span><p>TermGL v0.1.0, Internal v1.2.1</p>
+<p>Cython bindings for TermGL, the terminal-based graphics library.</p>
+<dl class="simple">
+<dt><em>tuple[int, int]</em> <strong>VERSION</strong></dt><dd><p>Major and Minor C TermGL version</p>
+</dd>
+<dt><em>termgl.Gradient</em> <strong>gradient_min</strong></dt><dd><p>Minimal gradient of length 10</p>
+</dd>
+<dt><em>termgl.Gradient</em> <strong>gradient_full</strong></dt><dd><p>Full gradient of length 70</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.Buffer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">Buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Buffers.
+Can use bitwise combination of all buffers as long as they have been enabled. <em>FRAME_BUFFER</em> is always enabled.</p>
+<ul class="simple">
+<li><p><strong>FRAME_BUFFER</strong>: frame buffer</p></li>
+<li><p><strong>Z_BUFFER</strong>: depth buffer</p></li>
+<li><p><strong>OUTPUT_BUFFER</strong>: output buffer allowing for just one print statement to flush. Much faster on most terminals</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.Color">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">Color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colors and Font Modifiers.
+Can use bitwise combination of up to one <strong>Text Color</strong>, up to one <strong>Background Color</strong>, and any <strong>Modifiers</strong>.</p>
+<p><strong>Text Color</strong>:</p>
+<ul class="simple">
+<li><p><strong>BLACK</strong></p></li>
+<li><p><strong>RED</strong></p></li>
+<li><p><strong>GREEN</strong></p></li>
+<li><p><strong>YELLOW</strong></p></li>
+<li><p><strong>BLUE</strong></p></li>
+<li><p><strong>PURPLE</strong></p></li>
+<li><p><strong>CYAN</strong></p></li>
+<li><p><strong>WHITE</strong></p></li>
+</ul>
+<p><strong>Background Color</strong>:</p>
+<ul class="simple">
+<li><p><strong>BLACK_BKG</strong></p></li>
+<li><p><strong>RED_BKG</strong></p></li>
+<li><p><strong>GREEN_BKG</strong></p></li>
+<li><p><strong>YELLOW_BKG</strong></p></li>
+<li><p><strong>BLUE_BKG</strong></p></li>
+<li><p><strong>PURPLE_BKG</strong></p></li>
+<li><p><strong>CYAN_BKG</strong></p></li>
+<li><p><strong>WHITE_BKG</strong></p></li>
+</ul>
+<p><strong>Modifier</strong>:</p>
+<ul class="simple">
+<li><p><strong>HIGH_INTENSITY</strong></p></li>
+<li><p><strong>HIGH_INTENSITY_BKG</strong></p></li>
+<li><p><strong>BOLD</strong></p></li>
+<li><p><strong>UNDERLINE</strong></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.Cull">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">Cull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Cull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triangle culling options.
+Must use bitwise combination of one <strong>Face</strong> and one <strong>Winding</strong>.</p>
+<p><strong>Face</strong>:</p>
+<ul class="simple">
+<li><p><strong>BACK</strong></p></li>
+<li><p><strong>FRONT</strong></p></li>
+</ul>
+<p><strong>Winding</strong>:</p>
+<ul class="simple">
+<li><p><strong>CW</strong></p></li>
+<li><p><strong>CCW</strong></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.Gradient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">Gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new character gradient used by drawing functions in TGL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>grad</strong> (<em>bytes</em>) – Bytestring of characters in increasing intensity</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.Gradient.grad">
+<span class="sig-name descname"><span class="pre">grad</span></span><a class="headerlink" href="#termgl.Gradient.grad" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Readonly</em> Gradient string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.Setting">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">Setting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Settings.
+Can use bitwise combination of all settings.</p>
+<ul class="simple">
+<li><p><strong>Z_BUFFER</strong>: depth buffer</p></li>
+<li><p><strong>DOUBLE_CHARS</strong>: square pixels by printing 2 characters per pixel</p></li>
+<li><p><strong>CULL_FACE</strong>: cull specified triangle faces in 3D</p></li>
+<li><p><strong>OUTPUT_BUFFER</strong>: output buffer allowing for just one print statement to flush. Much faster on most terminals</p></li>
+<li><p><strong>PROGRESSIVE</strong>: over-write previous frame instead of clearing screen. Elmininates strobing but requires call to tgl_clear_screen before drawing smaller image and after resizing terminal if terminal size was smaller than frame size</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.TGL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">TGL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL" title="Permalink to this definition">¶</a></dt>
+<dd><p>TermGL rendering context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>int</em>) – </p></li>
+<li><p><strong>height</strong> (<em>int</em>) – </p></li>
+<li><p><strong>gradient</strong> (<a class="reference internal" href="#termgl.Gradient" title="termgl.Gradient"><em>termgl.Gradient</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MemoryError</strong> – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.camera">
+<span class="sig-name descname"><span class="pre">camera</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fov</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">near</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">far</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.camera" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the perspective projection matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fov</strong> (<em>float</em>) – field of view in radians</p></li>
+<li><p><strong>near</strong> (<em>float</em>) – near plane distance</p></li>
+<li><p><strong>far</strong> (<em>float</em>) – far plane distance</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">buffers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear buffers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffers</strong> (<a class="reference internal" href="#termgl.Buffer" title="termgl.Buffer"><em>termgl.Buffer</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.cull_face">
+<span class="sig-name descname"><span class="pre">cull_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cull</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.cull_face" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set face culling options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cull</strong> (<a class="reference internal" href="#termgl.Cull" title="termgl.Cull"><em>termgl.Cull</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.disable">
+<span class="sig-name descname"><span class="pre">disable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>settings</strong> (<a class="reference internal" href="#termgl.Setting" title="termgl.Setting"><em>termgl.Setting</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.enable">
+<span class="sig-name descname"><span class="pre">enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>settings</strong> (<a class="reference internal" href="#termgl.Setting" title="termgl.Setting"><em>termgl.Setting</em></a>) – </p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MemoryError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>OSError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.TGL.gradient">
+<span class="sig-name descname"><span class="pre">gradient</span></span><a class="headerlink" href="#termgl.TGL.gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Readonly</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#termgl.Gradient" title="termgl.Gradient">termgl.Gradient</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.line">
+<span class="sig-name descname"><span class="pre">line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a line to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y0</strong> (<em>int</em>) – </p></li>
+<li><p><strong>z0</strong> (<em>float</em>) – depth</p></li>
+<li><p><strong>i0</strong> (<em>int</em>) – intensity [0..255]</p></li>
+<li><p><strong>x1</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – </p></li>
+<li><p><strong>z1</strong> (<em>float</em>) – depth</p></li>
+<li><p><strong>i1</strong> (<em>int</em>) – intensity [0..255]</p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="#termgl.Color" title="termgl.Color"><em>termgl.Color</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.point">
+<span class="sig-name descname"><span class="pre">point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a point to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y</strong> (<em>int</em>) – </p></li>
+<li><p><strong>z</strong> (<em>float</em>) – depth</p></li>
+<li><p><strong>i</strong> (<em>int</em>) – intensity [0..255]</p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="#termgl.Color" title="termgl.Color"><em>termgl.Color</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.putchar">
+<span class="sig-name descname"><span class="pre">putchar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.putchar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a characer to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y</strong> (<em>int</em>) – </p></li>
+<li><p><strong>c</strong> (<em>bytes</em>) – </p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="#termgl.Color" title="termgl.Color"><em>termgl.Color</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.puts">
+<span class="sig-name descname"><span class="pre">puts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.puts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a string to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y</strong> (<em>int</em>) – </p></li>
+<li><p><strong>c</strong> (<em>bytes</em>) – </p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="#termgl.Color" title="termgl.Color"><em>termgl.Color</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.TGL.shader">
+<span class="sig-name descname"><span class="pre">shader</span></span><a class="headerlink" href="#termgl.TGL.shader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shader function called during 3D rendering after projection and clipping, and before writing to framebuffer. Takes the triangle’s vertices and the vertices’ intensities as input, and these values can be changed by the function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable[numpy.ndarray[dtype=numpy.float32, shape=(3,3)], numpy.ndarray[dtype=numpy.uint8, shape=(3)]] or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.TGL.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><a class="headerlink" href="#termgl.TGL.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Readonly</em> Internal transform applied before perspective projection. Comparable to view matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#termgl.Transform" title="termgl.Transform">termgl.Transform</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.triangle">
+<span class="sig-name descname"><span class="pre">triangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.triangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a triangle to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x0</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y0</strong> (<em>int</em>) – </p></li>
+<li><p><strong>z0</strong> (<em>float</em>) – depth</p></li>
+<li><p><strong>i0</strong> (<em>int</em>) – intensity [0..255]</p></li>
+<li><p><strong>x1</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – </p></li>
+<li><p><strong>z1</strong> (<em>float</em>) – depth</p></li>
+<li><p><strong>i1</strong> (<em>int</em>) – intensity [0..255]</p></li>
+<li><p><strong>x2</strong> (<em>int</em>) – </p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – </p></li>
+<li><p><strong>z2</strong> (<em>float</em>) – depth</p></li>
+<li><p><strong>i2</strong> (<em>int</em>) – intensity [0..255]</p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="#termgl.Color" title="termgl.Color"><em>termgl.Color</em></a>) – </p></li>
+<li><p><strong>fill</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.triangle3d">
+<span class="sig-name descname"><span class="pre">triangle3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.triangle3d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a 3D triangle to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.float32</em><em>, </em><em>shape=</em><em>(</em><em>3</em><em>,</em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>intensity</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.uint8</em><em>, </em><em>shape=</em><em>(</em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>color</strong> (<a class="reference internal" href="#termgl.Color" title="termgl.Color"><em>termgl.Color</em></a>) – </p></li>
+<li><p><strong>fill</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.TGL.triangle3da">
+<span class="sig-name descname"><span class="pre">triangle3da</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cnt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.TGL.triangle3da" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an array of 3D triangles to the framebuffer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.float32</em><em>, </em><em>shape=</em><em>(</em><em>cnt</em><em>, </em><em>3</em><em>, </em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>intensities</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.uint8</em><em>, </em><em>shape=</em><em>(</em><em>cnt</em><em>, </em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>colors</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.uint16</em><em>, </em><em>shape=</em><em>(</em><em>cnt</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>fill</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.bool</em><em>, </em><em>shape=</em><em>(</em><em>cnt</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>cnt</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="termgl.Transform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><a class="headerlink" href="#termgl.Transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>3D Transformation using 4x4 matrices.
+Applied in order: rotation -&gt; scale -&gt; translation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MemoryError</strong> – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.Transform.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vout</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Transform.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the result transformation to three points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vin</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.float32</em><em>, </em><em>shape=</em><em>(</em><em>3</em><em>,</em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>vout</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.float32</em><em>, </em><em>shape=</em><em>(</em><em>3</em><em>,</em><em>3</em><em>)</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.Transform.applya">
+<span class="sig-name descname"><span class="pre">applya</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Transform.applya" title="Permalink to this definition">¶</a></dt>
+<dd><p>apply(vin, vout, cnt)</p>
+<p>Apply the result transformation to an array of groups of three points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vin</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.float32</em><em>, </em><em>shape=</em><em>(</em><em>cnt</em><em>, </em><em>3</em><em>,</em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>vout</strong> (<em>numpy.ndarray</em><em>[</em><em>dtype=numpy.float32</em><em>, </em><em>shape=</em><em>(</em><em>cnt</em><em>, </em><em>3</em><em>,</em><em>3</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>cnt</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.Transform.calc_result">
+<span class="sig-name descname"><span class="pre">calc_result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Transform.calc_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the result matrix based on the translation, scale, and rotation matrices.
+Must be called prior to <em>apply</em> or <em>applya</em> if any matrices have changed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.Transform.calc_rotation">
+<span class="sig-name descname"><span class="pre">calc_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Transform.calc_rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the rotation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – </p></li>
+<li><p><strong>y</strong> (<em>float</em>) – </p></li>
+<li><p><strong>z</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.Transform.calc_scale">
+<span class="sig-name descname"><span class="pre">calc_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Transform.calc_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the scale matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – </p></li>
+<li><p><strong>y</strong> (<em>float</em>) – </p></li>
+<li><p><strong>z</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="termgl.Transform.calc_translation">
+<span class="sig-name descname"><span class="pre">calc_translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.Transform.calc_translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the translation matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – </p></li>
+<li><p><strong>y</strong> (<em>float</em>) – </p></li>
+<li><p><strong>z</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.Transform.result">
+<span class="sig-name descname"><span class="pre">result</span></span><a class="headerlink" href="#termgl.Transform.result" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Readonly</em> Result matrix obtained after multiplying rotation, scale, and translation matrices
+:type: numpy.ndarray[dtype=numpy.float32, shape=(4,4)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.Transform.rotation">
+<span class="sig-name descname"><span class="pre">rotation</span></span><a class="headerlink" href="#termgl.Transform.rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotation matrix
+:type: numpy.ndarray[dtype=numpy.float32, shape=(4,4)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.Transform.scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#termgl.Transform.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scale matrix
+:type: numpy.ndarray[dtype=numpy.float32, shape=(4,4)]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="termgl.Transform.translation">
+<span class="sig-name descname"><span class="pre">translation</span></span><a class="headerlink" href="#termgl.Transform.translation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translation matrix
+:type: numpy.ndarray[dtype=numpy.float32, shape=(4,4)]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="termgl.clear_screen">
+<span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">clear_screen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#termgl.clear_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the sceen.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="termgl.flush">
+<span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#termgl.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush stdout.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="termgl.get_console_size">
+<span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">get_console_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">screen_buffer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.get_console_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get number of console columns and rows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>screen_buffer</strong> (<em>bool</em>) – True for size of screen buffer, False for size of window. On UNIX, value is ignored and assumed True</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>column and row count</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[int, int]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="termgl.read">
+<span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read up to count bytes (characters) from raw terminal input without blocking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>count</strong> (<em>int</em>) – maximum number of bytes to read</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>input from stdin</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="termgl.set_console_size">
+<span class="sig-prename descclassname"><span class="pre">termgl.</span></span><span class="sig-name descname"><span class="pre">set_console_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#termgl.set_console_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set console size.
+Only changes printable area and will not enlarge window if printable area extends beyond window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>int</em>) – number of columns</p></li>
+<li><p><strong>row</strong> (<em>int</em>) – number of rows</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">TermGL Documentation</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">TermGL 0.1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TermGL Documentation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Wojciech Graj.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
+    </div>
+  </body>
+</html>

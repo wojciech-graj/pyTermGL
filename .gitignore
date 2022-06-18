@@ -1,0 +1,10 @@
+build/
+__pycache__/
+.pytest_cache/
+*.so
+/termgl.c
+/dist/
+/_static/
+/_templates/
+/termgl.egg-info/
+/build/
