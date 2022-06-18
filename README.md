@@ -8,8 +8,16 @@ Realtime input reading from terminal for user-interaction.\
 
 ## Table of Contents
 
+[Install](https://github.com/wojciech-graj/pyTermGL/blob/master/README.md#Install)\
 [Documentation](https://github.com/wojciech-graj/pyTermGL/blob/master/README.md#Documentation)\
 [Gallery](https://github.com/wojciech-graj/pyTermGL/blob/master/README.md#Gallery)
+
+## Install
+
+Package can be found on [PyPI](https://pypi.org/project/termgl/) and can be installed using pip:
+```
+pip install termgl
+```
 
 ## Documentation
 
