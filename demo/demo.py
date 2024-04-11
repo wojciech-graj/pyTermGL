@@ -10,7 +10,7 @@ def main() -> None:
     tgl.clear_screen()
     console_size = tgl.get_console_size(True)
     print(
-        f"TermGL v{tgl.VERSION[0]}.{tgl.VERSION[1]} Demo Utitlity",
+        f"TermGL v{tgl.VERSION[0]}.{tgl.VERSION[1]} Demo Utility",
         f"Console size: {console_size[0]}x{console_size[1]}",
         "Select a Demo:",
         "1. Utah Teapot",

@@ -694,7 +694,7 @@ cdef class TGL:
                              <void*>self, &__intermediate_shader)
 
 
-cdef void __intermediate_shader(tgl.TGLTriangle *inp, void *data):
+cdef void __intermediate_shader(tgl.TGLTriangle *inp, void *data) noexcept:
     cdef TGL self = <TGL>data
     cdef float[:, :] vertices_view = inp.vertices
     cdef uint8_t[:] intensity_view = inp.intensity
