@@ -74,7 +74,7 @@ def demo_teapot(res_x: int, res_y: int, use_shader: bool) -> None:
                           shape=(trigs.shape[0], 3))
     colors = np.full(fill_value=tgl.Color.WHITE,
                      shape=(trigs.shape[0]), dtype=np.uint16)
-    fill = np.full(fill_value=True, shape=(trigs.shape[0]), dtype=np.bool)
+    fill = np.full(fill_value=True, shape=(trigs.shape[0]), dtype=bool)
 
     while True:
         # Edit transformation to move objects
