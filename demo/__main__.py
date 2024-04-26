@@ -30,7 +30,7 @@ def main() -> None:
     n = int(input())
     if n == 1:
         choice = input("Use lighting? [Y/N]")
-        demo_teapot(40, 40, (choice == 'Y' or choice == 'y'))
+        demo_teapot(40, 40, choice in ('Y', 'y'))
     elif n == 2:
         demo_star(80, 40, 500)
     elif n == 3:
@@ -42,6 +42,4 @@ def main() -> None:
     else:
         raise Exception("Invalid Input.")
 
-
-if __name__ == "__main__":
-    main()
+main()

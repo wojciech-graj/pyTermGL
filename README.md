@@ -44,7 +44,7 @@ ctx.flush()
 ### Demo
 
 A variety of demos can be found in the ```demo``` directory
-To run the demo utility, simply ```python demo/demo.py```
+To run the demo utility, simply ```python demo```
 Available demos and TermGL features used:
 1. Utah Teapot\
 Renders a rotating 3D Utah Teapot.

@@ -36,10 +36,10 @@ def demo_mandelbrot(res_x: int, res_y: int) -> None:
         for pix_y in range(res_y):
             x = init_x
             for pix_x in range(res_x):
-                ix = 0
-                iy = 0
-                ix2 = 0
-                iy2 = 0
+                ix = 0.
+                iy = 0.
+                ix2 = 0.
+                iy2 = 0.
                 i = 0
                 while (ix2 + iy2) <= 4.0 and i < i_max:
                     next_ix = ix2 - iy2 + x
@@ -56,7 +56,7 @@ def demo_mandelbrot(res_x: int, res_y: int) -> None:
         ctx.flush()
         ctx.clear(tgl.Buffer.FRAME_BUFFER | tgl.Buffer.OUTPUT_BUFFER)
 
-        if (frame < frame_max):
+        if frame < frame_max:
             frame += 1
             mid_x += dmid_x
             mid_y += dmid_y

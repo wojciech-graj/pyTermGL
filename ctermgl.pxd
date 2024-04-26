@@ -88,7 +88,7 @@ cdef extern from "termgl.h":
     void tgl3d_cull_face(TGL *tgl, uint8_t settings)
     void tgl3d_shader(TGL *tgl, const TGLTriangle *input, uint16_t color,
                       bint fill, void *data,
-                      void (*intermediate_shader)(TGLTriangle*, void*))
+                      void (*intermediate_shader)(TGLTriangle*, void*) except *)
     void tgl3d_transform_rotate(TGLTransform *transform, float x, float y, float z)
     void tgl3d_transform_scale(TGLTransform *transform, float x, float y, float z)
     void tgl3d_transform_translate(TGLTransform *transform, float x, float y, float z)

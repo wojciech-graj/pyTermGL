@@ -1,5 +1,5 @@
 """
-TermGL v0.1.0, Internal v1.2.1
+TermGL v0.1.1, Internal v1.2.1
 
 Cython bindings for TermGL, the terminal-based graphics library.
 
@@ -176,7 +176,7 @@ def read(count: int) -> bytes:
     cdef long ret = tgl.tglutil_read(buf, count)
     if (ret < 0):
         raise OSError(errno)
-    buf[ret] = '\0'
+    buf[ret] = b'\0'
     retval = bytes(buf)
     PyMem_Free(buf)
     return retval
@@ -694,7 +694,7 @@ cdef class TGL:
                              <void*>self, &__intermediate_shader)
 
 
-cdef void __intermediate_shader(tgl.TGLTriangle *inp, void *data) noexcept:
+cdef void __intermediate_shader(tgl.TGLTriangle *inp, void *data) except *:
     cdef TGL self = <TGL>data
     cdef float[:, :] vertices_view = inp.vertices
     cdef uint8_t[:] intensity_view = inp.intensity

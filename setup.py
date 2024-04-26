@@ -2,16 +2,25 @@ from setuptools import Extension, setup, find_packages
 from Cython.Build import cythonize
 import numpy
 
-with open("README.md", "rb") as f:
-    raw_long_description = f.read().decode("utf-8")
+
+define_macros = [
+    ("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION"),
+    ("TERMGL3D", None),
+    ("TERMGLUTIL", None),
+]
+
+
+with open("README.md") as f:
+    raw_long_description = f.read()
     long_description = raw_long_description.partition("## Gallery")[0]
+
 
 setup(
     name="termgl",
     description="TermGL wrapper in Cython",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version="0.1.0",
+    version="0.1.1",
     author="Wojciech Graj",
     url="https://github.com/wojciech-graj/pyTermGL",
     license="MIT",
@@ -20,15 +29,14 @@ setup(
             Extension(
                 "termgl",
                 sources=["termgl.pyx", "TermGL/src/termgl.c"],
-                include_dirs=["TermGL/lib", numpy.get_include()],
-                define_macros=[
-                    ("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION"),
-                    ("TERMGL3D", None),
-                    ("TERMGLUTIL", None),
+                include_dirs=[
+                    "TermGL/lib",
+                    numpy.get_include()
                 ],
+                define_macros=define_macros,
             )
         ],
-        language_level=2
+        language_level=3
     ),
     packages=find_packages("termgl"),
     classifiers=[

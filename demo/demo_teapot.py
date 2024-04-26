@@ -14,10 +14,10 @@ def intermediate_shader(verts: np.ndarray, intensity: np.ndarray) -> None:
     ac = np.subtract(verts[2], verts[0])
 
     # Cross product much faster than np.cross
-    cp = np.empty((3), dtype=np.float32)
-    cp[0] = ((ab[1] * ac[2]) - (ab[2] * ac[1]))
-    cp[1] = ((ab[2] * ac[0]) - (ab[0] * ac[2]))
-    cp[2] = ((ab[0] * ac[1]) - (ab[1] * ac[0]))
+    cp = np.empty(3, dtype=np.float32)
+    cp[0] = (ab[1] * ac[2]) - (ab[2] * ac[1])
+    cp[1] = (ab[2] * ac[0]) - (ab[0] * ac[2])
+    cp[2] = (ab[0] * ac[1]) - (ab[1] * ac[0])
 
     dp = np.dot(LIGHT_DIRECTION, cp)
     light_mul = ((0.15) if (dp < 0) else
@@ -67,7 +67,7 @@ def demo_teapot(res_x: int, res_y: int, use_shader: bool) -> None:
     obj_t.calc_translation(0.0, 0.0, 0.0)
 
     dn = 0.02
-    n = 0
+    n = 0.
 
     trigs_out = np.empty(trigs.shape, dtype=np.float32)
     intensities = np.full(fill_value=255, dtype=np.uint8,
