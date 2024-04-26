@@ -1,5 +1,5 @@
 """
-TermGL v0.1.1, Internal v1.2.1
+TermGL v0.1.2, Internal v1.2.1
 
 Cython bindings for TermGL, the terminal-based graphics library.
 

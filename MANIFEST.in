@@ -1,3 +1,5 @@
-include /termgl.pyx
-include /TermGL/lib/*
-exclude /termgl.c
+include termgl.pyx
+include ctermgl.pxd
+graft TermGL
+prune tests
+exclude termgl.c

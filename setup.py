@@ -20,7 +20,7 @@ setup(
     description="TermGL wrapper in Cython",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version="0.1.1",
+    version="0.1.2",
     author="Wojciech Graj",
     url="https://github.com/wojciech-graj/pyTermGL",
     license="MIT",
