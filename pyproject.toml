@@ -1,3 +1,47 @@
 [build-system]
-requires = ['cython', 'setuptools', 'numpy>=1.20']
+requires = ["cython", "setuptools", 'numpy>=1.25']
 build-backend = 'setuptools.build_meta'
+
+[project]
+name = "termgl"
+description = "Terminal-based 2D & 3D graphics library."
+readme = "README.md"
+version = "0.2.0"
+authors = [
+    {name = "Wojciech Graj"}
+]
+license = {file = "LICENSE"}
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.25"
+]
+classifiers=[
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Environment :: Console",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Multimedia :: Graphics :: 3D Rendering",
+    "Topic :: Terminals",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Cython",
+]
+keywords= ["graphics", "terminal", "render", "rendering", "text", "ascii"]
+
+[project.urls]
+Repository = "https://github.com/wojciech-graj/pyTermGL"
+
+[project.optional-dependencies]
+dev = [
+    "pylsp-mypy",
+    "pylsp-rope",
+    "python-lsp-isort",
+    "python-lsp-server[all]"
+]
+
+[tool.setuptools]
+py-modules = []
