@@ -10,7 +10,7 @@ import sys
 
 import numpy
 from Cython.Build import cythonize
-from setuptools import Extension, find_packages, setup
+from setuptools import Extension, setup
 
 define_macros = [
     ("TERMGL3D", None),
@@ -19,15 +19,13 @@ define_macros = [
 if sys.platform in ("win32", "linux"):
     define_macros.append(("TERMGLUTIL", None))
 
-setup(
-    ext_modules=cythonize([
-        Extension(
-            "termgl",
-            sources=["termgl.pyx", "TermGL/src/termgl.c"],
-            include_dirs=["./TermGL/lib", numpy.get_include()],
-            define_macros=define_macros,
-        )
-    ],
-                          language_level=3),
-    packages=find_packages("termgl"),
-)
+setup(ext_modules=cythonize([
+    Extension(
+        "termgl",
+        sources=["./termgl/termgl.pyx", "./vendor/src/termgl.c"],
+        include_dirs=["./vendor/lib", numpy.get_include()],
+        define_macros=define_macros,
+    )
+],
+                            language_level=3),
+      packages=["termgl"])

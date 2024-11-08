@@ -7,6 +7,6 @@
 /_templates/
 /build/
 /dist/
-/termgl.c
+/termgl/termgl.c
 __pycache__/
 build/
