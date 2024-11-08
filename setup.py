@@ -6,30 +6,28 @@ Permission is granted to use, copy, modify, and redistribute the work.
 Full license information available in the project LICENSE file.
 """
 
-from setuptools import Extension, setup, find_packages
-from Cython.Build import cythonize
-import numpy
+import sys
 
+import numpy
+from Cython.Build import cythonize
+from setuptools import Extension, find_packages, setup
 
 define_macros = [
     ("TERMGL3D", None),
-    ("TERMGLUTIL", None),
 ]
 
+if sys.platform in ("win32", "linux"):
+    define_macros.append(("TERMGLUTIL", None))
+
 setup(
-    ext_modules=cythonize(
-        [
-            Extension(
-                "termgl",
-                sources=["termgl.pyx", "TermGL/src/termgl.c"],
-                include_dirs=[
-                    "./TermGL/lib",
-                    numpy.get_include()
-                ],
-                define_macros=define_macros,
-            )
-        ],
-        language_level=3
-    ),
+    ext_modules=cythonize([
+        Extension(
+            "termgl",
+            sources=["termgl.pyx", "TermGL/src/termgl.c"],
+            include_dirs=["./TermGL/lib", numpy.get_include()],
+            define_macros=define_macros,
+        )
+    ],
+                          language_level=3),
     packages=find_packages("termgl"),
 )

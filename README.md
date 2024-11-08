@@ -2,7 +2,6 @@
 
 Cython binding for a terminal-based graphics library for both 2D and 3D graphics.\
 Works in all terminals supporting ANSI escape codes.\
-Support for Windows and UNIX.\
 Realtime input reading from terminal for user-interaction.\
 16 Background colors, 16 foreground colors, bold and underline.
 
