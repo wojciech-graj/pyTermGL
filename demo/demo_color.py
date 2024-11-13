@@ -1,7 +1,6 @@
 import termgl as tgl
 
-
-COLORS_FG = (
+COLORS = (
     tgl.Color.BLACK,
     tgl.Color.RED,
     tgl.Color.GREEN,
@@ -12,60 +11,59 @@ COLORS_FG = (
     tgl.Color.WHITE,
 )
 
-
-COLORS_BKG = (
-    tgl.Color.BLACK_BKG,
-    tgl.Color.RED_BKG,
-    tgl.Color.GREEN_BKG,
-    tgl.Color.YELLOW_BKG,
-    tgl.Color.BLUE_BKG,
-    tgl.Color.PURPLE_BKG,
-    tgl.Color.CYAN_BKG,
-    tgl.Color.WHITE_BKG,
-)
-
-
 MODIFIERS = (
-    (0, 0),
-    (tgl.Color.HIGH_INTENSITY, tgl.Color.HIGH_INTENSITY_BKG),
-    (tgl.Color.BOLD, tgl.Color.BOLD),
-    (tgl.Color.BOLD | tgl.Color.HIGH_INTENSITY, tgl.Color.HIGH_INTENSITY_BKG),
-    (tgl.Color.UNDERLINE, tgl.Color.UNDERLINE),
+    (False, 0),
+    (True, 0),
+    (False, tgl.FmtFlag.BOLD),
+    (True, tgl.FmtFlag.BOLD),
+    (False, tgl.FmtFlag.UNDERLINE),
 )
-
 
 TEXT = (
-    b"K",
-    b"R",
-    b"G",
-    b"Y",
-    b"B",
-    b"P",
-    b"C",
-    b"W",
+    ord('K'),
+    ord('R'),
+    ord('G'),
+    ord('Y'),
+    ord('B'),
+    ord('P'),
+    ord('C'),
+    ord('W'),
 )
 
 
 def demo_color(res_x: int, res_y: int) -> None:
-    ctx = tgl.TGL(res_x, res_y, tgl.gradient_min)
+    ctx = tgl.TGL(res_x, res_y)
     ctx.enable(tgl.Setting.OUTPUT_BUFFER)
 
-    ctx.puts(9, 0, b"NONE", tgl.Color.WHITE)
-    ctx.puts(9, 2, b"HIGH_INTENSITY", tgl.Color.WHITE)
-    ctx.puts(9, 4, b"BOLD", tgl.Color.WHITE)
-    ctx.puts(9, 6, b"BOLD + HIGH_INTENSITY", tgl.Color.WHITE)
-    ctx.puts(9, 8, b"UNDERLINE", tgl.Color.WHITE)
+    white = tgl.PixFmt(tgl.Idx(tgl.Color.WHITE))
+    ctx.puts(9, 0, "NONE", white)
+    ctx.puts(9, 2, "HIGH_INTENSITY", white)
+    ctx.puts(9, 4, "BOLD", white)
+    ctx.puts(9, 6, "BOLD + HIGH_INTENSITY", white)
+    ctx.puts(9, 8, "UNDERLINE", white)
 
     for m in range(5):
         y_start = m * 2
-        ctx.putchar(0, y_start, b'K',
-                    tgl.Color.BLACK | tgl.Color.WHITE_BKG | MODIFIERS[m][0])
-        ctx.putchar(0, y_start + 1, b'K',
-                    tgl.Color.WHITE | tgl.Color.BLACK_BKG | MODIFIERS[m][1])
-        for c in range(1, 8):
-            ctx.putchar(c, y_start, TEXT[c],
-                        COLORS_FG[c] | tgl.Color.BLACK_BKG | MODIFIERS[m][0])
-            ctx.putchar(c, y_start + 1, TEXT[c],
-                        tgl.Color.BLACK | COLORS_BKG[c] | MODIFIERS[m][1])
+        for c in range(8):
+            ctx.putchar(
+                c, y_start, TEXT[c],
+                tgl.PixFmt(
+                    tgl.Idx(COLORS[c],
+                            high_intensity=MODIFIERS[m][0],
+                            flags=MODIFIERS[m][1]),
+                    tgl.Idx(tgl.Color.BLACK,
+                            high_intensity=MODIFIERS[m][0],
+                            flags=MODIFIERS[m][1])))
+            ctx.putchar(
+                c, y_start + 1, TEXT[c],
+                tgl.PixFmt(
+                    tgl.Idx(tgl.Color.BLACK,
+                            high_intensity=MODIFIERS[m][0],
+                            flags=MODIFIERS[m][1]),
+                    tgl.Idx(COLORS[c],
+                            high_intensity=MODIFIERS[m][0],
+                            flags=MODIFIERS[m][1])))
 
     ctx.flush()
+
+    input()
