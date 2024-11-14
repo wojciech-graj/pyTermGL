@@ -116,7 +116,6 @@ def demo_teapot(res_x: int, res_y: int) -> None:
             ctx.triangle_3d(trig, vertex_shader, pixel_shader)
 
         ctx.flush()
-        ctx.clear(tgl.Buffer.FRAME_BUFFER | tgl.Buffer.Z_BUFFER
-                  | tgl.Buffer.OUTPUT_BUFFER)
+        ctx.clear(tgl.Buffer.FRAME | tgl.Buffer.Z | tgl.Buffer.OUTPUT)
 
         n += dn * 0.5

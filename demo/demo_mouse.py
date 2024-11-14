@@ -13,7 +13,7 @@ def demo_mouse(res_x: int, res_y: int, frametime_ms: int) -> None:
 
     ctx.puts(0, 0, b"Move the mouse.", white)
     ctx.flush()
-    ctx.clear(tgl.Buffer.OUTPUT_BUFFER | tgl.Buffer.FRAME_BUFFER)
+    ctx.clear(tgl.Buffer.OUTPUT | tgl.Buffer.FRAME)
 
     while True:
         mouse_events = tgl.read(256, count_events=8)[1]
@@ -36,7 +36,7 @@ def demo_mouse(res_x: int, res_y: int, frametime_ms: int) -> None:
             ctx.puts(0, 1, b"Latest action: " + action, white)
 
             ctx.flush()
-            ctx.clear(tgl.Buffer.OUTPUT_BUFFER | tgl.Buffer.FRAME_BUFFER)
+            ctx.clear(tgl.Buffer.OUTPUT | tgl.Buffer.FRAME)
 
         sleep(frametime_ms / 1000)
 

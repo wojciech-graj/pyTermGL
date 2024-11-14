@@ -11,9 +11,14 @@ import termgl as tgl
 
 def main() -> None:
     tgl.clear_screen()
-    console_size = tgl.get_console_size(True)
-    print(f"TermGL v{tgl.VERSION[0]}.{tgl.VERSION[1]} Demo Utility",
-          f"Console size: {console_size[0]}x{console_size[1]}",
+    try:
+        x, y = tgl.get_console_size(True)
+        console_size = f"{x}x{y}"
+    except ImportError:
+        print("WARNING: Demos 4 and 7 are only available on Linux or Windows systems")
+        console_size = "UNKNOWN"
+    print(f"TermGL v{tgl.TERMGL_VERSION[0]}.{tgl.TERMGL_VERSION[1]} Demo Utility",
+          f"Console size: {console_size}",
           "Select a Demo:",
           "1. Utah Teapot",
           "    Renders a rotating 3D Utah Teapot.",

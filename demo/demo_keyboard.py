@@ -15,7 +15,7 @@ def demo_keyboard(res_x: int, res_y: int, frametime_ms: int) -> None:
         ctx.puts(0, 0, "Pressed keys: " + input_keys if input_keys else "NONE",
                  white)
         ctx.flush()
-        ctx.clear(tgl.Buffer.OUTPUT_BUFFER | tgl.Buffer.FRAME_BUFFER)
+        ctx.clear(tgl.Buffer.OUTPUT | tgl.Buffer.FRAME)
         sleep(frametime_ms / 1000)
 
     tgl.set_echo_input(True)

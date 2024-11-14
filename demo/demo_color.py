@@ -36,11 +36,11 @@ def demo_color(res_x: int, res_y: int) -> None:
     ctx.enable(tgl.Setting.OUTPUT_BUFFER)
 
     white = tgl.PixFmt(tgl.Idx(tgl.Color.WHITE))
-    ctx.puts(9, 0, "NONE", white)
-    ctx.puts(9, 2, "HIGH_INTENSITY", white)
-    ctx.puts(9, 4, "BOLD", white)
-    ctx.puts(9, 6, "BOLD + HIGH_INTENSITY", white)
-    ctx.puts(9, 8, "UNDERLINE", white)
+    ctx.puts(9, 0, b"NONE", white)
+    ctx.puts(9, 2, b"HIGH_INTENSITY", white)
+    ctx.puts(9, 4, b"BOLD", white)
+    ctx.puts(9, 6, b"BOLD + HIGH_INTENSITY", white)
+    ctx.puts(9, 8, b"UNDERLINE", white)
 
     for m in range(5):
         y_start = m * 2

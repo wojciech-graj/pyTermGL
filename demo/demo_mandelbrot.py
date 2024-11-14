@@ -57,7 +57,7 @@ def demo_mandelbrot(res_x: int, res_y: int) -> None:
             y += dy
 
         ctx.flush()
-        ctx.clear(tgl.Buffer.FRAME_BUFFER | tgl.Buffer.OUTPUT_BUFFER)
+        ctx.clear(tgl.Buffer.FRAME | tgl.Buffer.OUTPUT)
 
         if frame < frame_max:
             frame += 1

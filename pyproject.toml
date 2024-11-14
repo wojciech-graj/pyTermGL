@@ -37,6 +37,7 @@ Repository = "https://github.com/wojciech-graj/pyTermGL"
 dev = [
     "pylsp-mypy",
     "pylsp-rope",
+    "pytest",
     "python-lsp-isort",
     "python-lsp-server[all]"
 ]

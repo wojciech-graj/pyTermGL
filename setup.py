@@ -27,5 +27,7 @@ setup(ext_modules=cythonize([
         define_macros=define_macros,
     )
 ],
+                            compiler_directives={"embedsignature": True},
                             language_level=3),
+      package_data={"termgl": ["py.typed", "__init__.pyi"]},
       packages=["termgl"])

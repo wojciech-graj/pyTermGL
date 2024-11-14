@@ -27,8 +27,15 @@ IF TERMGLUTIL == 1:
     cimport ctermglutil as tglutil
 
 
-VERSION = (tgl.TGL_VERSION_MAJOR, tgl.TGL_VERSION_MINOR)
-
+TERMGL_VERSION = (tgl.TGL_VERSION_MAJOR, tgl.TGL_VERSION_MINOR)
+cdef tgl.TGLVert _vert_tmp
+Vert = np.asarray(<tgl.TGLVert[:1]>(&_vert_tmp)).dtype
+Trig3D = np.dtype([
+    ('verts', np.float32, (3, 3)),
+    ('uv', np.uint8, (3, 2)),
+    ('fill', np.bool_)
+])
+TexturePixel = np.dtype([('char', np.byte), ('pix_fmt', PixFmt)])
 
 class Setting(IntFlag, boundary=CONFORM):
     OUTPUT_BUFFER = tgl.TGL_OUTPUT_BUFFER
@@ -40,9 +47,9 @@ class Setting(IntFlag, boundary=CONFORM):
 
 
 class Buffer(IntFlag, boundary=CONFORM):
-    FRAME_BUFFER = tgl.TGL_FRAME_BUFFER
-    Z_BUFFER = tgl.TGL_Z_BUFFER
-    OUTPUT_BUFFER = tgl.TGL_OUTPUT_BUFFER
+    FRAME = tgl.TGL_FRAME_BUFFER
+    Z = tgl.TGL_Z_BUFFER
+    OUTPUT = tgl.TGL_OUTPUT_BUFFER
 
 
 class Color(IntEnum):
@@ -97,6 +104,14 @@ cdef class Fmt:
             fmt = Idx.__new__(Idx)
             fmt._c_fmt = c_fmt
             return fmt
+
+    @property
+    def flags(self) -> FmtFlag:
+        return FmtFlag(self._c_fmt.flags)
+
+    @flags.setter
+    def flags(self, flags not None: FmtFlag) -> None:
+        raise NotImplementedError
 
 
 cdef class RGB(Fmt):
@@ -208,17 +223,6 @@ cdef class PixFmt:
     def bkg(self, bkg not None: Fmt) -> None:
         self._c_pix_fmt.bkg = bkg._c_fmt
 
-cdef tgl.TGLVert _vert_tmp
-Vert = np.asarray(<tgl.TGLVert[:1]>(&_vert_tmp)).dtype
-
-Trig3D = np.dtype([
-    ('verts', np.float32, (3, 3)),
-    ('uv', np.uint8, (3, 2)),
-    ('fill', np.bool_)
-])
-
-TexturePixel = np.dtype([('char', np.byte), ('pix_fmt', PixFmt)])
-
 
 @dataclass
 cdef class MouseEvent:
@@ -235,6 +239,14 @@ cdef class MouseEvent:
                               x = event.x,
                               y = event.y)
 
+BLACK = PixFmt(Idx(Color.BLACK))
+RED = PixFmt(Idx(Color.RED))
+GREEN = PixFmt(Idx(Color.GREEN))
+YELLOW = PixFmt(Idx(Color.YELLOW))
+BLUE = PixFmt(Idx(Color.BLUE))
+PURPLE = PixFmt(Idx(Color.PURPLE))
+CYAN = PixFmt(Idx(Color.CYAN))
+WHITE = PixFmt(Idx(Color.WHITE))
 
 def clear_screen() -> None:
     tgl.tgl_clear_screen()
@@ -245,13 +257,13 @@ def flush() -> None:
     fflush(stdout)
 
 
-def read(size_t count, size_t count_events = 0) -> tuple[bytes, list[MouseEvent]]:
+def read(size_t count, size_t count_events = 0) -> tuple[bytes, Optional[list[MouseEvent]]]:
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
         cdef char *buf = <char *>PyMem_Malloc(count + 1)
         cdef tglutil.TGLMouseEvent *event_buf = NULL
-        if count_events > 0:
+        if count_events:
             event_buf = <tglutil.TGLMouseEvent *>PyMem_Malloc(sizeof(tglutil.TGLMouseEvent) * count_events)
         cdef size_t count_read_events = 0
         cdef ssize_t ret = tglutil.tglutil_read(buf, count, event_buf, count_events, &count_read_events)
@@ -263,9 +275,12 @@ def read(size_t count, size_t count_events = 0) -> tuple[bytes, list[MouseEvent]
         buf[ret] = b'\0'
         retval = bytes(buf)
 
-        mouse_events = []
-        for i in range(count_read_events):
-            mouse_events.append(MouseEvent._from_c(event_buf[i]))
+        if count_events:
+            mouse_events = []
+            for i in range(count_read_events):
+                mouse_events.append(MouseEvent._from_c(event_buf[i]))
+        else:
+            mouse_events = None
 
         PyMem_Free(buf)
         PyMem_Free(event_buf)
@@ -279,7 +294,7 @@ def get_console_size(bint screen_buffer) -> tuple[int, int]:
         cdef unsigned col
         cdef unsigned row
         cdef int ret = tglutil.tglutil_get_console_size(&col, &row, screen_buffer)
-        if ret == -1:
+        if ret < 0:
             raise OSError(errno)
 
         return (col, row)
@@ -290,7 +305,7 @@ def set_console_size(unsigned col, unsigned row) -> None:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
         cdef int ret = tglutil.tglutil_set_console_size(col, row)
-        if ret == -1:
+        if ret < 0:
             raise OSError(errno)
 
 
@@ -299,7 +314,7 @@ def set_window_title(bytes title not None) -> None:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
         cdef int ret = tglutil.tglutil_set_window_title(title + b'\x00')
-        if ret == -1:
+        if ret < 0:
             raise OSError(errno)
 
 
@@ -382,15 +397,17 @@ cdef class VertexShader:
 
     def __cinit__(self) -> None:
         self._c_data = <void *>self
-        self._c_vertex_shader = VertexShader._vertex_shader
+        self._c_vertex_shader = &VertexShader._vertex_shader
 
     @staticmethod
-    cdef void _vertex_shader(const tgl.TGLVec3 in_, tgl.TGLVec4 out, const void *data) except *:
+    cdef void _vertex_shader(const float *in_, tgl.TGLVec4 out, const void *data) except *:
         cdef VertexShader self = <VertexShader>data
         in_np = np.asarray(<tgl.TGLVec3>in_, dtype=np.float32)
         in_np.flags.writeable = False
         out_ret = self.vertex_shader(in_np)
         cdef float[::1] out_view = out_ret
+        if out_view.shape[0] != 4:
+            raise ValueError
         memcpy(out, &out_view[0], 4 * sizeof(float))
 
     def vertex_shader(self, float[:] in_) -> float[:]:
@@ -403,44 +420,63 @@ cdef class VertexShaderSimple(VertexShader):
         self._c_data = &self._c_vertex_shader_simple
         self._c_vertex_shader = tgl.tgl_vertex_shader_simple
 
-    def __init__(self, float[:, ::1] mat) -> None:
+    def __init__(self, float[:, ::1] mat not None) -> None:
         cdef float[:, ::1] mat_view = mat
+        if mat_view.shape[0] != 4 or mat_view.shape[1] != 4:
+            raise ValueError
         memcpy(&self._c_vertex_shader_simple.mat[0][0], &mat_view[0, 0], 4 * 4 * sizeof(float))
 
 cdef class PixelShaderSimple(PixelShader):
     cdef tgl.TGLPixelShaderSimple _c_pixel_shader_simple
     _grad: Gradient
 
-    def __cinit__(self) -> None:
+    def __cinit__(self, PixFmt color not None, Gradient grad not None) -> None:
         self._c_data = &self._c_pixel_shader_simple
         self._c_pixel_shader = tgl.tgl_pixel_shader_simple
 
-    def __init__(self, PixFmt color not None, Gradient grad not None) -> None:
         self._c_pixel_shader_simple.color = color._c_pix_fmt
         self._grad = grad
         self._c_pixel_shader_simple.grad = self._grad._c_gradient
 
+    @property
+    def grad(self) -> Gradient:
+        return self._grad
+
+    @grad.setter
+    def grad(self, Gradient grad not None) -> None:
+        self._grad = grad
+        self._c_pixel_shader_simple.grad = self._grad._c_gradient
+
+    @property
+    def color(self) -> PixFmt:
+        return PixFmt._from_c(self._c_pix_fmt)
+
+    @color.setter
+    def color(self, PixFmt color not None):
+        self._c_pixel_shader_simple.color = color._c_pix_fmt
+
 cdef class PixelShaderTexture(PixelShader):
     cdef tgl.TGLPixelShaderTexture _c_pixel_shader_texture
 
-    def __cinit__(self) -> None:
+    def __cinit__(self, pixels not None: TexturePixel[:, ::1]) -> None:
         self._c_data = &self._c_pixel_shader_texture
         self._c_pixel_shader = tgl.tgl_pixel_shader_texture
 
-    def __init__(self, pixels not None: TexturePixel[:, ::1]) -> None:
         height, width = pixels.shape
-        cdef char *chars = <char *>PyMem_Malloc(sizeof(char) * width * height)
-        cdef tgl.TGLPixFmt *colors = <tgl.TGLPixFmt *>PyMem_Malloc(sizeof(tgl.TGLPixFmt) * width * height)
+        cdef size_t nelem = height * width
+        cdef char *chars = <char *>PyMem_Malloc(nelem)
+        cdef tgl.TGLPixFmt *colors = <tgl.TGLPixFmt *>PyMem_Malloc(sizeof(tgl.TGLPixFmt) * nelem)
 
         self._c_pixel_shader_texture.width = width
         self._c_pixel_shader_texture.height = height
         self._c_pixel_shader_texture.chars = chars
         self._c_pixel_shader_texture.colors = colors
 
-        # TODO: do this more efficiently
-        for i, element in enumerate(pixels.flatten(order='C')):
-            chars[i] = element["char"]
-            colors[i] = (<PixFmt>(element["pix_fmt"]))._c_pix_fmt
+        cdef char[::1] chars_view = pixels["char"].ravel(order='C')
+        memcpy(chars, &chars_view[0], nelem)
+
+        for i, element in enumerate(pixels["pix_fmt"].flatten(order='C')):
+            colors[i] = (<PixFmt>element)._c_pix_fmt
 
     def __dealloc__(self) -> None:
         PyMem_Free(self._c_pixel_shader_texture.chars)
@@ -448,18 +484,26 @@ cdef class PixelShaderTexture(PixelShader):
 
 
 def camera(float[:, ::1] camera, int width, int height, float fov, float near_val, float far_val):
+    if camera.shape[0] != 4 or camera.shape[1] != 4:
+        raise ValueError
     tgl.tgl_camera(<tgl.TGLVec4 *>&camera[0][0], width, height, fov, near_val, far_val)
 
 
 def rotate(float[:, ::1] mat, float x, float y, float z):
+    if mat.shape[0] != 4 or mat.shape[1] != 4:
+        raise ValueError
     tgl.tgl_rotate(<tgl.TGLVec4 *>&mat[0][0], x, y, z)
 
 
 def scale(float[:, ::1] mat, float x, float y, float z):
+    if mat.shape[0] != 4 or mat.shape[1] != 4:
+        raise ValueError
     tgl.tgl_scale(<tgl.TGLVec4 *>&mat[0][0], x, y, z)
 
 
 def translate(float[:, ::1] mat, float x, float y, float z):
+    if mat.shape[0] != 4 or mat.shape[1] != 4:
+        raise ValueError
     tgl.tgl_translate(<tgl.TGLVec4 *>&mat[0][0], x, y, z)
 
 
@@ -486,7 +530,7 @@ cdef class TGL:
 
     def flush(self) -> None:
         cdef int ret = tgl.tgl_flush(self._c_tgl)
-        if ret == -1:
+        if ret < 0:
             raise OSError(errno)
 
     def clear(self, buffers not None: Buffer) -> None:
@@ -494,7 +538,7 @@ cdef class TGL:
 
     def enable(self, settings not None: Setting) -> None:
         cdef int ret = tgl.tgl_enable(self._c_tgl, settings)
-        if ret == -1:
+        if ret < 0:
             raise MemoryError(errno)
 
     def disable(self, settings not None: Setting) -> None:
@@ -503,18 +547,24 @@ cdef class TGL:
     def putchar(self, int x, int y, char c, PixFmt color not None) -> None:
         tgl.tgl_putchar(self._c_tgl, x, y, c, color._c_pix_fmt)
 
-    def puts(self, int x, int y, char *c, PixFmt color not None):
-        tgl.tgl_puts(self._c_tgl, x, y, c, color._c_pix_fmt)
+    def puts(self, int x, int y, char *c, PixFmt color not None) -> None:
+        tgl.tgl_puts(self._c_tgl, x, y, c + b'\0', color._c_pix_fmt)
 
     def point(self, v not None: Vert | Vert[:], PixelShader pixel_shader not None) -> None:
+        if v.dtype != Vert:
+            raise ValueError
         for vert in np.atleast_1d(v):
             tgl.tgl_point(self._c_tgl, vert, pixel_shader._c_pixel_shader, pixel_shader._c_data)
 
     def line(self, v not None: Vert[:] | Vert[:, :], PixelShader pixel_shader not None) -> None:
+        if v.dtype != Vert:
+            raise ValueError
         for verts in np.atleast_2d(v):
             tgl.tgl_line(self._c_tgl, verts[0], verts[1], pixel_shader._c_pixel_shader, pixel_shader._c_data)
 
     def triangle(self, v not None: Vert[:] | Vert[:, :], PixelShader pixel_shader not None, bint fill = False) -> None:
+        if v.dtype != Vert:
+            raise ValueError
         cdef void (*f)(tgl.TGL *, tgl.TGLVert, tgl.TGLVert, tgl.TGLVert, tgl.TGLPixelShader *, const void *)
         f = tgl.tgl_triangle_fill if fill else tgl.tgl_triangle
         for verts in np.atleast_2d(v):
@@ -524,6 +574,8 @@ cdef class TGL:
         tgl.tgl_cull_face(self._c_tgl, face | winding)
 
     def triangle_3d(self, trigs not None: Trig3D[:] | Trig3D[:, :], VertexShader vertex_shader not None, PixelShader pixel_shader not None) -> None:
+        if trigs.dtype != Trig3D:
+            raise ValueError
         cdef float[:, ::1] in_
         cdef uint8_t[:, ::1] uv
         cdef bint fill
