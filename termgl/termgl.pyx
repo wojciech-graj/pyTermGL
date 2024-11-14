@@ -4,6 +4,11 @@ TermGL v0.2.0, Internal v1.5.0
 Cython bindings for TermGL, the terminal-based graphics library.
 """
 
+IF UNAME_SYSNAME == "Linux" or UNAME_SYSNAME == "Windows":
+    DEF TERMGLUTIL = 1
+ELSE:
+    DEF TERMGLUTIL = 0
+
 from dataclasses import dataclass
 from enum import IntFlag, IntEnum, CONFORM
 from typing import Optional
@@ -18,6 +23,8 @@ import numpy as np
 cimport numpy as np
 
 cimport ctermgl as tgl
+IF TERMGLUTIL == 1:
+    cimport ctermglutil as tglutil
 
 
 VERSION = (tgl.TGL_VERSION_MAJOR, tgl.TGL_VERSION_MINOR)
@@ -65,11 +72,14 @@ class Winding(IntEnum):
 
 
 class MouseButton(IntEnum):
-    UNKNOWN = tgl.TGL_MOUSE_UNKNOWN
-    RELEASE = tgl.TGL_MOUSE_RELEASE
-    MOUSE_1 = tgl.TGL_MOUSE_1
-    MOUSE_2 = tgl.TGL_MOUSE_2
-    MOUSE_3 = tgl.TGL_MOUSE_3
+    IF TERMGLUTIL == 0:
+        pass
+    ELSE:
+        UNKNOWN = tglutil.TGL_MOUSE_UNKNOWN
+        RELEASE = tglutil.TGL_MOUSE_RELEASE
+        MOUSE_1 = tglutil.TGL_MOUSE_1
+        MOUSE_2 = tglutil.TGL_MOUSE_2
+        MOUSE_3 = tglutil.TGL_MOUSE_3
 
 
 cdef class Fmt:
@@ -217,12 +227,13 @@ cdef class MouseEvent:
     x: int
     y: int
 
-    @staticmethod
-    cdef MouseEvent _from_c(tgl.TGLMouseEvent event):
-        return MouseEvent(button = MouseButton(event.button & 0x1f),
-                          mouse_wheel_or_movement = bool(event.button & tgl.TGL_MOUSE_WHEEL_OR_MOVEMENT),
-                          x = event.x,
-                          y = event.y)
+    IF TERMGLUTIL == 1:
+        @staticmethod
+        cdef MouseEvent _from_c(tglutil.TGLMouseEvent event):
+            return MouseEvent(button = MouseButton(event.button & 0x1f),
+                              mouse_wheel_or_movement = bool(event.button & tglutil.TGL_MOUSE_WHEEL_OR_MOVEMENT),
+                              x = event.x,
+                              y = event.y)
 
 
 def clear_screen() -> None:
@@ -235,61 +246,79 @@ def flush() -> None:
 
 
 def read(size_t count, size_t count_events = 0) -> tuple[bytes, list[MouseEvent]]:
-    cdef char *buf = <char *>PyMem_Malloc(count + 1)
-    cdef tgl.TGLMouseEvent *event_buf = NULL
-    if count_events > 0:
-        event_buf = <tgl.TGLMouseEvent *>PyMem_Malloc(sizeof(tgl.TGLMouseEvent) * count_events)
-    cdef size_t count_read_events = 0
-    cdef ssize_t ret = tgl.tglutil_read(buf, count, event_buf, count_events, &count_read_events)
-    if ret < 0:
+    IF TERMGLUTIL == 0:
+        raise ImportError("TermGLUtil is only available on Linux and Windows systems")
+    ELSE:
+        cdef char *buf = <char *>PyMem_Malloc(count + 1)
+        cdef tglutil.TGLMouseEvent *event_buf = NULL
+        if count_events > 0:
+            event_buf = <tglutil.TGLMouseEvent *>PyMem_Malloc(sizeof(tglutil.TGLMouseEvent) * count_events)
+        cdef size_t count_read_events = 0
+        cdef ssize_t ret = tglutil.tglutil_read(buf, count, event_buf, count_events, &count_read_events)
+        if ret < 0:
+            PyMem_Free(buf)
+            PyMem_Free(event_buf)
+            raise OSError(errno)
+
+        buf[ret] = b'\0'
+        retval = bytes(buf)
+
+        mouse_events = []
+        for i in range(count_read_events):
+            mouse_events.append(MouseEvent._from_c(event_buf[i]))
+
         PyMem_Free(buf)
         PyMem_Free(event_buf)
-        raise OSError(errno)
-
-    buf[ret] = b'\0'
-    retval = bytes(buf)
-
-    mouse_events = []
-    for i in range(count_read_events):
-        mouse_events.append(MouseEvent._from_c(event_buf[i]))
-
-    PyMem_Free(buf)
-    PyMem_Free(event_buf)
-    return (retval, mouse_events)
+        return (retval, mouse_events)
 
 
 def get_console_size(bint screen_buffer) -> tuple[int, int]:
-    cdef unsigned col
-    cdef unsigned row
-    cdef int ret = tgl.tglutil_get_console_size(&col, &row, screen_buffer)
-    if ret == -1:
-        raise OSError(errno)
-    return (col, row)
+    IF TERMGLUTIL == 0:
+        raise ImportError("TermGLUtil is only available on Linux and Windows systems")
+    ELSE:
+        cdef unsigned col
+        cdef unsigned row
+        cdef int ret = tglutil.tglutil_get_console_size(&col, &row, screen_buffer)
+        if ret == -1:
+            raise OSError(errno)
+
+        return (col, row)
 
 
 def set_console_size(unsigned col, unsigned row) -> None:
-    cdef int ret = tgl.tglutil_set_console_size(col, row)
-    if ret == -1:
-        raise OSError(errno)
+    IF TERMGLUTIL == 0:
+        raise ImportError("TermGLUtil is only available on Linux and Windows systems")
+    ELSE:
+        cdef int ret = tglutil.tglutil_set_console_size(col, row)
+        if ret == -1:
+            raise OSError(errno)
 
 
 def set_window_title(bytes title not None) -> None:
-    cdef int ret = tgl.tglutil_set_window_title(title + b'\x00')
-    if ret == -1:
-        raise OSError(errno)
+    IF TERMGLUTIL == 0:
+        raise ImportError("TermGLUtil is only available on Linux and Windows systems")
+    ELSE:
+        cdef int ret = tglutil.tglutil_set_window_title(title + b'\x00')
+        if ret == -1:
+            raise OSError(errno)
 
 
 def set_echo_input(bint enabled) -> None:
-    print(enabled)
-    cdef int ret = tgl.tglutil_set_echo_input(enabled)
-    if ret:
-        raise OSError(errno)
+    IF TERMGLUTIL == 0:
+        raise ImportError("TermGLUtil is only available on Linux and Windows systems")
+    ELSE:
+        cdef int ret = tglutil.tglutil_set_echo_input(enabled)
+        if ret:
+            raise OSError(errno)
 
 
 def set_mouse_tracking_enabled(bint enabled) -> None:
-    cdef int ret = tgl.tglutil_set_mouse_tracking_enabled(enabled)
-    if ret:
-        raise OSError(errno)
+    IF TERMGLUTIL == 0:
+        raise ImportError("TermGLUtil is only available on Linux and Windows systems")
+    ELSE:
+        cdef int ret = tglutil.tglutil_set_mouse_tracking_enabled(enabled)
+        if ret:
+            raise OSError(errno)
 
 
 cdef class Gradient:
