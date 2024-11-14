@@ -548,7 +548,7 @@ cdef class TGL:
         tgl.tgl_putchar(self._c_tgl, x, y, c, color._c_pix_fmt)
 
     def puts(self, int x, int y, char *c, PixFmt color not None) -> None:
-        tgl.tgl_puts(self._c_tgl, x, y, c + b'\0', color._c_pix_fmt)
+        tgl.tgl_puts(self._c_tgl, x, y, c, color._c_pix_fmt)
 
     def point(self, v not None: Vert | Vert[:], PixelShader pixel_shader not None) -> None:
         if v.dtype != Vert:

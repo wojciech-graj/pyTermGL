@@ -9,9 +9,7 @@ def demo_mouse(res_x: int, res_y: int, frametime_ms: int) -> None:
     tgl.set_echo_input(False)
     tgl.set_mouse_tracking_enabled(True)
 
-    white = tgl.PixFmt(tgl.Idx(tgl.Color.WHITE))
-
-    ctx.puts(0, 0, b"Move the mouse.", white)
+    ctx.puts(0, 0, b"Move the mouse.", tgl.WHITE)
     ctx.flush()
     ctx.clear(tgl.Buffer.OUTPUT | tgl.Buffer.FRAME)
 
@@ -21,7 +19,7 @@ def demo_mouse(res_x: int, res_y: int, frametime_ms: int) -> None:
             event = mouse_events[-1]
             ctx.puts(
                 0, 0, f"Mouse position: {event.x:02d}, {event.y:02d}".encode(
-                    "ascii"), white)
+                    "ascii"), tgl.WHITE)
             match event.button:
                 case tgl.MouseButton.RELEASE:
                     action = b"Release"
@@ -33,7 +31,7 @@ def demo_mouse(res_x: int, res_y: int, frametime_ms: int) -> None:
                     action = b"Middle Click"
                 case _:
                     action = b"Unknown"
-            ctx.puts(0, 1, b"Latest action: " + action, white)
+            ctx.puts(0, 1, b"Latest action: " + action, tgl.WHITE)
 
             ctx.flush()
             ctx.clear(tgl.Buffer.OUTPUT | tgl.Buffer.FRAME)
