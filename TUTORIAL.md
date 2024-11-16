@@ -15,7 +15,7 @@ ctx.clear(tgl.Buffer.FRAME)
 
 ## Colors
 
-*See also:* [demo_color](./../demo/demo_color.py), [demo_rgb](./../demo/demo_rgb.py)
+*See also:* [demo_color](./demo/demo_color.py), [demo_rgb](./demo/demo_rgb.py)
 
 TermGL supports both indexed colors and 24 bit RGB. Drawing functions require a `PixFmt` object, which specifies the colors of the foreground character and the background behind it.
 
@@ -65,7 +65,7 @@ ctx.flush()
 
 ## 2D Rendering
 
-*See also:* [demo_mandelbrot](./../demo/demo_mandelbrot.py)
+*See also:* [demo_mandelbrot](./demo/demo_mandelbrot.py)
 
 2D rendering can be performed through the `point`, `line`, and `triangle` methods.
 
@@ -99,7 +99,7 @@ ctx.flush()
 
 ## 3D Rendering
 
-*See also:* [demo_teapot](./../demo/demo_teapot.py), [demo_texture](./../demo/demo_texture.py)
+*See also:* [demo_teapot](./demo/demo_teapot.py), [demo_texture](./demo/demo_texture.py)
 
 3D rendering can be performed through the `triangle_3d` method.
 
@@ -107,7 +107,7 @@ To only draw triangles from one side, you should enable `Setting.CULL_FACE`, and
 
 ## Mouse, Keyboard, and Utilities
 
-*See also:* [demo_keyboard](./../demo/demo_keyboard.py), [demo_mouse](./../demo/demo_mouse.py)
+*See also:* [demo_keyboard](./demo/demo_keyboard.py), [demo_mouse](./demo/demo_mouse.py)
 
 On Windows and Linux, TermGL provides functionality for reading mouse and keyboard events, and controlling other aspects of the terminal.
 
