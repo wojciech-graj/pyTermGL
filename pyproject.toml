@@ -35,6 +35,7 @@ Repository = "https://github.com/wojciech-graj/pyTermGL"
 
 [project.optional-dependencies]
 dev = [
+    "pdoc",
     "pylsp-mypy",
     "pylsp-rope",
     "pytest",

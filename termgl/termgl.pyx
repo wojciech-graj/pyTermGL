@@ -11,7 +11,7 @@ ELSE:
 
 from dataclasses import dataclass
 from enum import IntFlag, IntEnum, CONFORM
-from typing import Optional
+from typing import Annotated, Optional
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.errno cimport errno
@@ -27,23 +27,71 @@ IF TERMGLUTIL == 1:
     cimport ctermglutil as tglutil
 
 
-TERMGL_VERSION = (tgl.TGL_VERSION_MAJOR, tgl.TGL_VERSION_MINOR)
+__all__ = [
+    "TERMGL_VERSION",
+    "Vert",
+    "Trig3D",
+    "TexPix",
+    "Char",
+    "Setting",
+    "Buffer",
+    "Color",
+    "FmtFlag",
+    "Face",
+    "Winding",
+    "MouseButton",
+    "Fmt",
+    "RGB",
+    "Idx",
+    "PixFmt",
+    "MouseEvent",
+    "BLACK",
+    "RED",
+    "GREEN",
+    "YELLOW",
+    "BLUE",
+    "PURPLE",
+    "CYAN",
+    "WHITE",
+    "clear_screen",
+    "flush",
+    "read",
+    "get_console_size",
+    "set_console_size",
+    "set_window_title",
+    "set_echo_input",
+    "set_mouse_tracking_enabled",
+    "Gradient",
+    "gradient_full",
+    "gradient_min",
+    "PixelShader",
+    "VertexShader",
+    "VertexShaderSimple",
+    "PixelShaderSimple",
+    "PixelShaderTexture",
+    "camera",
+    "rotate",
+    "scale",
+    "translate",
+    "TGL",
+]
+
+
+TERMGL_VERSION: tuple[int, int] = (tgl.TGL_VERSION_MAJOR, tgl.TGL_VERSION_MINOR)
 cdef tgl.TGLVert _vert_tmp
 Vert = np.asarray(<tgl.TGLVert[:1]>(&_vert_tmp)).dtype
-Trig3D = np.dtype([
-    ('verts', np.float32, (3, 3)),
-    ('uv', np.uint8, (3, 2)),
-    ('fill', np.bool_)
-])
-TexturePixel = np.dtype([('char', np.byte), ('pix_fmt', PixFmt)])
+Trig3D = np.dtype([("verts", np.float32, (3, 3)), ("uv", np.uint8, (3, 2)), ("fill", np.bool_)])
+TexPix = np.dtype([("char", np.byte), ("pix_fmt", PixFmt)])
+Char = np.dtype([('x', np.intc), ('y', np.intc), ("char", np.byte)])
+
 
 class Setting(IntFlag, boundary=CONFORM):
-    OUTPUT_BUFFER = tgl.TGL_OUTPUT_BUFFER
-    Z_BUFFER = tgl.TGL_Z_BUFFER
-    DOUBLE_WIDTH = tgl.TGL_DOUBLE_WIDTH
-    DOUBLE_CHARS = tgl.TGL_DOUBLE_CHARS
-    PROGRESSIVE = tgl.TGL_PROGRESSIVE
-    CULL_FACE = tgl.TGL_CULL_FACE
+    OUTPUT_BUFFER: Annotated[Setting, "Output buffer allowing for just one print to flush. Much faster on most terminals, but requires a few hundred kilobytes of memory."] = tgl.TGL_OUTPUT_BUFFER
+    Z_BUFFER: Annotated[Setting, "depth buffer."] = tgl.TGL_Z_BUFFER
+    DOUBLE_WIDTH: Annotated[Setting, "Display characters at double their standard widths (Limited support from terminal emulators. Should work on Windows Terminal, XTerm, and Konsole)."] = tgl.TGL_DOUBLE_WIDTH
+    DOUBLE_CHARS: Annotated[Setting, "Square pixels by printing 2 characters per pixel."] = tgl.TGL_DOUBLE_CHARS
+    PROGRESSIVE: Annotated[Setting, "Over-write previous frame. Eliminates strobing but requires call to tgl_clear_screen before drawing smaller image and after resizing terminal if terminal size was smaller than frame size"] = tgl.TGL_PROGRESSIVE
+    CULL_FACE: Annotated[Setting, "(3D ONLY) Cull specified triangle faces"] = tgl.TGL_CULL_FACE
 
 
 class Buffer(IntFlag, boundary=CONFORM):
@@ -82,11 +130,11 @@ class MouseButton(IntEnum):
     IF TERMGLUTIL == 0:
         pass
     ELSE:
-        UNKNOWN = tglutil.TGL_MOUSE_UNKNOWN
-        RELEASE = tglutil.TGL_MOUSE_RELEASE
-        MOUSE_1 = tglutil.TGL_MOUSE_1
-        MOUSE_2 = tglutil.TGL_MOUSE_2
-        MOUSE_3 = tglutil.TGL_MOUSE_3
+        UNKNOWN: Annotated[MouseButton, "Assume button state didn't change."] = tglutil.TGL_MOUSE_UNKNOWN
+        RELEASE: Annotated[MouseButton, "At least 1 button released. It is unknown which one."] = tglutil.TGL_MOUSE_RELEASE
+        MOUSE_1: Annotated[MouseButton, "Left."] = tglutil.TGL_MOUSE_1
+        MOUSE_2: Annotated[MouseButton, "Right."] = tglutil.TGL_MOUSE_2
+        MOUSE_3: Annotated[MouseButton, "Middle."] = tglutil.TGL_MOUSE_3
 
 
 cdef class Fmt:
@@ -239,16 +287,18 @@ cdef class MouseEvent:
                               x = event.x,
                               y = event.y)
 
-BLACK = PixFmt(Idx(Color.BLACK))
-RED = PixFmt(Idx(Color.RED))
-GREEN = PixFmt(Idx(Color.GREEN))
-YELLOW = PixFmt(Idx(Color.YELLOW))
-BLUE = PixFmt(Idx(Color.BLUE))
-PURPLE = PixFmt(Idx(Color.PURPLE))
-CYAN = PixFmt(Idx(Color.CYAN))
-WHITE = PixFmt(Idx(Color.WHITE))
+BLACK: PixFmt = PixFmt(Idx(Color.BLACK))
+RED: PixFmt = PixFmt(Idx(Color.RED))
+GREEN: PixFmt = PixFmt(Idx(Color.GREEN))
+YELLOW: PixFmt = PixFmt(Idx(Color.YELLOW))
+BLUE: PixFmt = PixFmt(Idx(Color.BLUE))
+PURPLE: PixFmt = PixFmt(Idx(Color.PURPLE))
+CYAN: PixFmt = PixFmt(Idx(Color.CYAN))
+WHITE: PixFmt = PixFmt(Idx(Color.WHITE))
+
 
 def clear_screen() -> None:
+    """Clears the screen."""
     tgl.tgl_clear_screen()
     fflush(stdout)
 
@@ -258,6 +308,13 @@ def flush() -> None:
 
 
 def read(size_t count, size_t count_events = 0) -> tuple[bytes, Optional[list[MouseEvent]]]:
+    """Reads up to count bytes from raw terminal input and optionally reads up to count_events mouse events.
+
+    If mouse tracking is enabled but `count_events == 0`, output may contain Xterm control sequences
+    If mouse tracking is enabled, ensure `count >= count_events * 6`
+
+    :raises ImportError: On operating systems other than Linux or Windows
+    """
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
@@ -287,7 +344,12 @@ def read(size_t count, size_t count_events = 0) -> tuple[bytes, Optional[list[Mo
         return (retval, mouse_events)
 
 
-def get_console_size(bint screen_buffer) -> tuple[int, int]:
+def get_console_size(bint screen_buffer = True) -> tuple[int, int]:
+    """Gets number of console columns and rows.
+
+    :param screen_buffer: `True` for size of screen buffer, `False` for size of window. On UNIX, value is ignored and assumed `True`.
+    :raises ImportError: On operating systems other than Linux or Windows
+    """
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
@@ -301,6 +363,12 @@ def get_console_size(bint screen_buffer) -> tuple[int, int]:
 
 
 def set_console_size(unsigned col, unsigned row) -> None:
+    """Sets console size.
+
+    Only changes printable area and will not change window size if new size is larger than window
+
+    :raises ImportError: On operating systems other than Linux or Windows
+    """
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
@@ -310,15 +378,26 @@ def set_console_size(unsigned col, unsigned row) -> None:
 
 
 def set_window_title(bytes title not None) -> None:
+    """
+    Attempts to set window title
+
+    :raises ImportError: On operating systems other than Linux or Windows
+    """
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
-        cdef int ret = tglutil.tglutil_set_window_title(title + b'\x00')
+        cdef int ret = tglutil.tglutil_set_window_title(title)
         if ret < 0:
             raise OSError(errno)
 
 
 def set_echo_input(bint enabled) -> None:
+    """Sets if stdin input is displayed / echoed.
+
+    Set to `False` when using mouse tracking
+
+    :raises ImportError: On operating systems other than Linux or Windows
+    """
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
@@ -328,6 +407,13 @@ def set_echo_input(bint enabled) -> None:
 
 
 def set_mouse_tracking_enabled(bint enabled) -> None:
+    """
+    Sets if mouse is tracked
+
+    It is recommended to disable input echoing when using mouse tracking
+
+    :raises ImportError: On operating systems other than Linux or Windows
+    """
     IF TERMGLUTIL == 0:
         raise ImportError("TermGLUtil is only available on Linux and Windows systems")
     ELSE:
@@ -337,6 +423,7 @@ def set_mouse_tracking_enabled(bint enabled) -> None:
 
 
 cdef class Gradient:
+    """Gradient of characters from dark to bright."""
     cdef tgl.TGLGradient *_c_gradient
     cdef bint _ptr_owner
     _grad: bytes
@@ -356,6 +443,7 @@ cdef class Gradient:
         self._c_gradient.grad = self._grad
 
     def char(self, uint8_t intensity) -> int:
+        """Gets a gradient's character corresponding to an intensity (i.e. u or v value)."""
         return tgl.tgl_grad_char(self._c_gradient, intensity)
 
     @staticmethod
@@ -370,10 +458,11 @@ cdef class Gradient:
         return self._grad
 
 
-gradient_full = Gradient.from_ptr(&tgl.gradient_full)
-gradient_min = Gradient.from_ptr(&tgl.gradient_min)
+gradient_full: Gradient = Gradient.from_ptr(&tgl.gradient_full)
+gradient_min: Gradient = Gradient.from_ptr(&tgl.gradient_min)
 
 cdef class PixelShader:
+    """Pixel shader that is called for each pixel in draw functions."""
     cdef void *_c_data
     cdef tgl.TGLPixelShader *_c_pixel_shader
 
@@ -392,6 +481,7 @@ cdef class PixelShader:
         raise NotImplementedError
 
 cdef class VertexShader:
+    """Vertex shader that should transform an input vertex into Clip Space."""
     cdef void *_c_data
     cdef tgl.TGLVertexShader *_c_vertex_shader
 
@@ -414,6 +504,7 @@ cdef class VertexShader:
         raise NotImplementedError
 
 cdef class VertexShaderSimple(VertexShader):
+    """Vertex shader that outputs the input vertex multiplied by a matrix."""
     cdef tgl.TGLVertexShaderSimple _c_vertex_shader_simple
 
     def __cinit__(self) -> None:
@@ -427,6 +518,7 @@ cdef class VertexShaderSimple(VertexShader):
         memcpy(&self._c_vertex_shader_simple.mat[0][0], &mat_view[0, 0], 4 * 4 * sizeof(float))
 
 cdef class PixelShaderSimple(PixelShader):
+    """Pixel shader that maps u+v onto a TGLGradient and has fixed color."""
     cdef tgl.TGLPixelShaderSimple _c_pixel_shader_simple
     _grad: Gradient
 
@@ -456,9 +548,13 @@ cdef class PixelShaderSimple(PixelShader):
         self._c_pixel_shader_simple.color = color._c_pix_fmt
 
 cdef class PixelShaderTexture(PixelShader):
+    """Pixel shader that maps (u,v) onto a texture.
+
+    :param pixels: 2D array with `dtype=TexPix`
+    """
     cdef tgl.TGLPixelShaderTexture _c_pixel_shader_texture
 
-    def __cinit__(self, pixels not None: TexturePixel[:, ::1]) -> None:
+    def __cinit__(self, pixels not None: TexPix[:, ::1]) -> None:
         self._c_data = &self._c_pixel_shader_texture
         self._c_pixel_shader = tgl.tgl_pixel_shader_texture
 
@@ -484,24 +580,28 @@ cdef class PixelShaderTexture(PixelShader):
 
 
 def camera(float[:, ::1] camera, int width, int height, float fov, float near_val, float far_val):
+    """Sets `camera` to a camera matrix."""
     if camera.shape[0] != 4 or camera.shape[1] != 4:
         raise ValueError
     tgl.tgl_camera(<tgl.TGLVec4 *>&camera[0][0], width, height, fov, near_val, far_val)
 
 
 def rotate(float[:, ::1] mat, float x, float y, float z):
+    """Sets `mat` to a rotation matrix."""
     if mat.shape[0] != 4 or mat.shape[1] != 4:
         raise ValueError
     tgl.tgl_rotate(<tgl.TGLVec4 *>&mat[0][0], x, y, z)
 
 
 def scale(float[:, ::1] mat, float x, float y, float z):
+    """Sets `mat` to a scaling matrix."""
     if mat.shape[0] != 4 or mat.shape[1] != 4:
         raise ValueError
     tgl.tgl_scale(<tgl.TGLVec4 *>&mat[0][0], x, y, z)
 
 
 def translate(float[:, ::1] mat, float x, float y, float z):
+    """Sets `mat` to a translation matrix."""
     if mat.shape[0] != 4 or mat.shape[1] != 4:
         raise ValueError
     tgl.tgl_translate(<tgl.TGLVec4 *>&mat[0][0], x, y, z)
@@ -510,6 +610,7 @@ def translate(float[:, ::1] mat, float x, float y, float z):
 cdef bint _booted = False
 
 cdef class TGL:
+    """Rendering context that is passed to most functions."""
     cdef tgl.TGL *_c_tgl
 
     def __cinit__(self, unsigned width, unsigned height) -> None:
@@ -525,44 +626,69 @@ cdef class TGL:
         if self._c_tgl is NULL:
             raise MemoryError(errno)
 
-    def __deinit__(self) -> None:
-        tgl.tgl_delete(self._c_tgl)
+    def __dealloc__(self) -> None:
+        if self._c_tgl is not NULL:
+            tgl.tgl_delete(self._c_tgl)
 
     def flush(self) -> None:
+        """Prints frame buffer to terminal."""
         cdef int ret = tgl.tgl_flush(self._c_tgl)
         if ret < 0:
             raise OSError(errno)
 
     def clear(self, buffers not None: Buffer) -> None:
+        """Clears buffers."""
         tgl.tgl_clear(self._c_tgl, buffers)
 
     def enable(self, settings not None: Setting) -> None:
+        """Enables certain settings."""
         cdef int ret = tgl.tgl_enable(self._c_tgl, settings)
         if ret < 0:
             raise MemoryError(errno)
 
     def disable(self, settings not None: Setting) -> None:
+        """Disables certain settings."""
         tgl.tgl_disable(self._c_tgl, settings)
 
-    def putchar(self, int x, int y, char c, PixFmt color not None) -> None:
-        tgl.tgl_putchar(self._c_tgl, x, y, c, color._c_pix_fmt)
+    def putchar(self, c not None: Char | Char[:], PixFmt color not None) -> None:
+        """Prints a single character or array of characters.
+
+        :param c: 0D or 1D array with `dtype=Char`
+        """
+        if c.dtype != Char:
+            raise ValueError
+        for char_ in np.atleast_1d(c):
+            tgl.tgl_putchar(self._c_tgl, char_['x'], char_['y'], char_["char"], color._c_pix_fmt)
 
     def puts(self, int x, int y, char *c, PixFmt color not None) -> None:
+        """Prints a string."""
         tgl.tgl_puts(self._c_tgl, x, y, c, color._c_pix_fmt)
 
     def point(self, v not None: Vert | Vert[:], PixelShader pixel_shader not None) -> None:
+        """Draws a single point or array of points.
+
+        :param v: 0D or 1D array with `dtype=Vert`
+        """
         if v.dtype != Vert:
             raise ValueError
         for vert in np.atleast_1d(v):
             tgl.tgl_point(self._c_tgl, vert, pixel_shader._c_pixel_shader, pixel_shader._c_data)
 
     def line(self, v not None: Vert[:] | Vert[:, :], PixelShader pixel_shader not None) -> None:
+        """Draws a single line or array of lines.
+
+        :param v: 1D or 2D array with `dtype=Vert`
+        """
         if v.dtype != Vert:
             raise ValueError
         for verts in np.atleast_2d(v):
             tgl.tgl_line(self._c_tgl, verts[0], verts[1], pixel_shader._c_pixel_shader, pixel_shader._c_data)
 
     def triangle(self, v not None: Vert[:] | Vert[:, :], PixelShader pixel_shader not None, bint fill = False) -> None:
+        """Draws a single triangle or array of triangles.
+
+        :param v: 1D or 2D array with `dtype=Vert`
+        """
         if v.dtype != Vert:
             raise ValueError
         cdef void (*f)(tgl.TGL *, tgl.TGLVert, tgl.TGLVert, tgl.TGLVert, tgl.TGLPixelShader *, const void *)
@@ -571,9 +697,17 @@ cdef class TGL:
             f(self._c_tgl, verts[0], verts[1], verts[2], pixel_shader._c_pixel_shader, pixel_shader._c_data)
 
     def cull_face(self, face not None: Face, winding not None: Winding) -> None:
+        """Sets which face should be culled.
+
+        Requires `Setting.CULL_FACE` to be enabled for faces to be culled.
+        """
         tgl.tgl_cull_face(self._c_tgl, face | winding)
 
-    def triangle_3d(self, trigs not None: Trig3D[:] | Trig3D[:, :], VertexShader vertex_shader not None, PixelShader pixel_shader not None) -> None:
+    def triangle_3d(self, trigs not None: Trig3D | Trig3D[:], VertexShader vertex_shader not None, PixelShader pixel_shader not None) -> None:
+        """Draws a single triangle or array of triangles.
+
+        :param trigs: 0D or 1D array with `dtype=Trig3D`
+        """
         if trigs.dtype != Trig3D:
             raise ValueError
         cdef float[:, ::1] in_

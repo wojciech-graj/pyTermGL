@@ -1,3 +1,5 @@
+import numpy as np
+
 import termgl as tgl
 
 COLORS = (
@@ -45,7 +47,7 @@ def demo_color(res_x: int, res_y: int) -> None:
         y_start = m * 2
         for c in range(8):
             ctx.putchar(
-                c, y_start, TEXT[c],
+                np.array((c, y_start, TEXT[c]), dtype=tgl.Char),
                 tgl.PixFmt(
                     tgl.Idx(COLORS[c],
                             high_intensity=MODIFIERS[m][0],
@@ -54,7 +56,7 @@ def demo_color(res_x: int, res_y: int) -> None:
                             high_intensity=MODIFIERS[m][0],
                             flags=MODIFIERS[m][1])))
             ctx.putchar(
-                c, y_start + 1, TEXT[c],
+                np.array((c, y_start + 1, TEXT[c]), dtype=tgl.Char),
                 tgl.PixFmt(
                     tgl.Idx(tgl.Color.BLACK,
                             high_intensity=MODIFIERS[m][0],

@@ -323,7 +323,7 @@ tex = np.array(
          (ord('#'), tgl.PixFmt(tgl.Idx(tgl.Color.WHITE,
                                        flags=tgl.FmtFlag.BOLD))),
      ]],
-    dtype=tgl.TexturePixel)
+    dtype=tgl.TexPix)
 
 
 def demo_texture(res_x: int, res_y: int) -> None:

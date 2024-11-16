@@ -1,3 +1,5 @@
+import numpy as np
+
 import termgl as tgl
 
 
@@ -51,8 +53,10 @@ def demo_mandelbrot(res_x: int, res_y: int) -> None:
                     iy2 = iy * iy
                     i += 1
                 if i < i_max:
-                    ctx.putchar(pix_x, pix_y,
-                                tgl.gradient_full.char(i * 255 // i_max), fmt)
+                    ctx.putchar(
+                        np.array((pix_x, pix_y,
+                                  tgl.gradient_full.char(i * 255 // i_max)),
+                                 dtype=tgl.Char), fmt)
                 x += dx
             y += dy
 

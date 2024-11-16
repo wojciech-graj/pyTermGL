@@ -3,10 +3,7 @@
 *.so
 .pytest_cache/
 .ropeproject/
-/_static/
-/_templates/
-/build/
-/dist/
 /termgl/termgl.c
 __pycache__/
-build/
+/docs/
+/build/

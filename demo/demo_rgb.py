@@ -1,3 +1,5 @@
+import numpy as np
+
 import termgl as tgl
 
 
@@ -16,7 +18,8 @@ def demo_rgb(res_x: int, res_y: int) -> None:
             fmt = tgl.RGB(_rgb_map_circle(120 - x_scld, 100 - y_scld),
                           _rgb_map_circle(100 - x_scld, 140 - y_scld),
                           _rgb_map_circle(140 - x_scld, 140 - y_scld))
-            ctx.putchar(x, y, ord('.'), tgl.PixFmt(fmt, fmt))
+            ctx.putchar(np.array((x, y, ord('.')), dtype=tgl.Char),
+                        tgl.PixFmt(fmt, fmt))
 
     ctx.flush()
 
