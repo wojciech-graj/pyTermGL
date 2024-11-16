@@ -6,7 +6,7 @@ build-backend = 'setuptools.build_meta'
 name = "termgl"
 description = "Terminal-based 2D & 3D graphics library."
 readme = "README.md"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
     {name = "Wojciech Graj"}
 ]

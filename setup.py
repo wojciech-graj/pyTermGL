@@ -19,18 +19,17 @@ define_macros = [
 if sys.platform in ("win32", "linux"):
     define_macros.append(("TERMGLUTIL", None))
 
-    setup(
-        ext_modules=cythonize([
-            Extension(
-                "termgl",
-                sources=["./termgl/termgl.pyx", "./vendor/src/termgl.c"],
-                include_dirs=["./vendor/lib",
-                              numpy.get_include()],
-                define_macros=define_macros,
-            )
-        ],
-                              build_dir="build",
-                              language_level=3),
-        package_data={"termgl": ["py.typed", "__init__.pyi"]},
-        packages=["termgl"],
-    )
+setup(
+    ext_modules=cythonize([
+        Extension(
+            "termgl",
+            sources=["./termgl/termgl.pyx", "./vendor/src/termgl.c"],
+            include_dirs=["./vendor/lib", numpy.get_include()],
+            define_macros=define_macros,
+        )
+    ],
+                          build_dir="build",
+                          language_level=3),
+    package_data={"termgl": ["py.typed", "__init__.pyi"]},
+    packages=["termgl"],
+)
