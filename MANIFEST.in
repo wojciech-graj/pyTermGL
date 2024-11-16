@@ -3,5 +3,3 @@ graft vendor
 include TUTORIAL.md
 
 prune tests
-prune termgl.egg-info
-exclude termgl/termgl.c
