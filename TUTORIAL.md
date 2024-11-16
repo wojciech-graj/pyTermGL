@@ -127,6 +127,6 @@ while True:
     print(f"{keys!r}, {mouse_events}")
     sleep(0.1)
 
-tgl.set_mouse_tracking_enabled(True)
+tgl.set_mouse_tracking_enabled(False)
 tgl.set_echo_input(True)
 ```

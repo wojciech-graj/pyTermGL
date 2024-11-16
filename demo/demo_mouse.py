@@ -38,5 +38,5 @@ def demo_mouse(res_x: int, res_y: int, frametime_ms: int) -> None:
 
         sleep(frametime_ms / 1000)
 
-    tgl.set_mouse_tracking_enabled(True)
+    tgl.set_mouse_tracking_enabled(False)
     tgl.set_echo_input(True)
