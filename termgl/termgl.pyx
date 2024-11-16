@@ -1,8 +1,4 @@
-"""
-TermGL v0.2.0, Internal v1.5.0
-
-Cython bindings for TermGL, the terminal-based graphics library.
-"""
+"""TermGL, the terminal-based graphics library."""
 
 IF UNAME_SYSNAME == "Linux" or UNAME_SYSNAME == "Windows":
     DEF TERMGLUTIL = 1
