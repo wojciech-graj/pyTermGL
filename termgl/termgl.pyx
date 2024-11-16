@@ -87,10 +87,10 @@ Char = np.dtype([('x', np.intc), ('y', np.intc), ("char", np.byte)])
 
 class Setting(IntFlag, boundary=CONFORM):
     OUTPUT_BUFFER: Annotated[Setting, "Output buffer allowing for just one print to flush. Much faster on most terminals, but requires a few hundred kilobytes of memory."] = tgl.TGL_OUTPUT_BUFFER
-    Z_BUFFER: Annotated[Setting, "depth buffer."] = tgl.TGL_Z_BUFFER
+    Z_BUFFER: Annotated[Setting, "Depth buffer."] = tgl.TGL_Z_BUFFER
     DOUBLE_WIDTH: Annotated[Setting, "Display characters at double their standard widths (Limited support from terminal emulators. Should work on Windows Terminal, XTerm, and Konsole)."] = tgl.TGL_DOUBLE_WIDTH
     DOUBLE_CHARS: Annotated[Setting, "Square pixels by printing 2 characters per pixel."] = tgl.TGL_DOUBLE_CHARS
-    PROGRESSIVE: Annotated[Setting, "Over-write previous frame. Eliminates strobing but requires call to tgl_clear_screen before drawing smaller image and after resizing terminal if terminal size was smaller than frame size"] = tgl.TGL_PROGRESSIVE
+    PROGRESSIVE: Annotated[Setting, "Over-write previous frame. Eliminates strobing but requires call to `clear_screen` before drawing smaller image and after resizing terminal if terminal size was smaller than frame size"] = tgl.TGL_PROGRESSIVE
     CULL_FACE: Annotated[Setting, "(3D ONLY) Cull specified triangle faces"] = tgl.TGL_CULL_FACE
 
 
@@ -308,10 +308,10 @@ def flush() -> None:
 
 
 def read(size_t count, size_t count_events = 0) -> tuple[bytes, Optional[list[MouseEvent]]]:
-    """Reads up to count bytes from raw terminal input and optionally reads up to count_events mouse events.
+    """Reads up to `count` bytes from raw terminal input and optionally reads up to `count_events` mouse events.
 
-    If mouse tracking is enabled but `count_events == 0`, output may contain Xterm control sequences
-    If mouse tracking is enabled, ensure `count >= count_events * 6`
+    If mouse tracking is enabled but `count_events == 0`, output may contain Xterm control sequences.
+    If mouse tracking is enabled, ensure `count >= count_events * 6`.
 
     :raises ImportError: On operating systems other than Linux or Windows
     """

@@ -23,9 +23,11 @@ pip install termgl
 
 ## Documentation
 
-Documentation can be found [here](https://wojciech-graj.github.io/pyTermGL/)
+The best way to learn to use TermGL is to read the tutorial [here](./TUTORIAL.md).
 
-### Demo
+Additionally, documentation of all public members of TermGL can be found [here](https://wojciech-graj.github.io/pyTermGL/).
+
+## Demo
 
 A variety of demos can be found in the `demo` directory. To run the demo utility, simply `python demo`.
 

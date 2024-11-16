@@ -1,5 +1,7 @@
-include termgl.pyx
-include ctermgl.pxd
-graft TermGL
+graft termgl
+graft vendor
+include TUTORIAL.md
+
 prune tests
-exclude termgl.c
+prune termgl.egg-info
+exclude termgl/termgl.c
