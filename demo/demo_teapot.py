@@ -15,6 +15,7 @@ class PixelShader(tgl.PixelShader):
         ab = self.trig["verts"][1] - self.trig["verts"][0]
         ac = self.trig["verts"][2] - self.trig["verts"][0]
 
+        # Cross product much faster than np.cross
         cp = np.empty(3, dtype=np.float32)
         cp[0] = (ab[1] * ac[2]) - (ab[2] * ac[1])
         cp[1] = (ab[2] * ac[0]) - (ab[0] * ac[2])
@@ -29,26 +30,6 @@ class PixelShader(tgl.PixelShader):
         c = tgl.gradient_min.char(light_mul * 255)
 
         return (color, c)
-
-
-def pixel_shader(u: int, v: int) -> tuple[tgl.PixFmt, int]:
-    ab = np.subtract(verts[1], verts[0])
-    ac = np.subtract(verts[2], verts[0])
-
-    # Cross product much faster than np.cross
-    cp = np.empty(3, dtype=np.float32)
-    cp[0] = (ab[1] * ac[2]) - (ab[2] * ac[1])
-    cp[1] = (ab[2] * ac[0]) - (ab[0] * ac[2])
-    cp[2] = (ab[0] * ac[1]) - (ab[1] * ac[0])
-
-    dp = np.dot(LIGHT_DIRECTION, cp)
-    light_mul = ((0.15) if (dp < 0) else
-                 (acos(dp /
-                       (np.linalg.norm(cp) * MAG_LIGHT_DIRECTION)) * -0.31831 +
-                  1.0))
-    intensity[0] = intensity[0] * light_mul
-    intensity[1] = intensity[1] * light_mul
-    intensity[2] = intensity[2] * light_mul
 
 
 def stl_load(f) -> np.ndarray:
